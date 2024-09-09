@@ -1,7 +1,8 @@
-import express, { Request, Response } from "express";
+import express from "express";
 
 import cors from 'cors'
 import { userController } from "./controllers/userController";
+import { iaQuery } from "./controllers/iaQuery";
 
 
 const app = express();
@@ -15,6 +16,8 @@ const PORT = 3001
 
 
 app.post('/api/auth', userController.login)
+app.post('/api/devbot', iaQuery.query)
+
 
 
 

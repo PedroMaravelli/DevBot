@@ -6,15 +6,11 @@ import axios from 'axios'
 const oauth2Client = new OAuth2Client()
 const prisma = new PrismaClient()
 
-interface UserProps{
-    email: string
-    name:string
-    quantityQuestions: number
-}
 
 
 export const userController = {
     login: async (req: Request, res: Response) => {
+      
         const code = req.headers.authorization
 
         const response = await axios.post(
@@ -27,7 +23,7 @@ export const userController = {
               grant_type: 'authorization_code'
             })
 
-        const {email, name, quantityQuestions}: UserProps = req.body
+       
 
         const accessToken = response.data.access_token;
 
@@ -41,11 +37,19 @@ export const userController = {
           );
 
           const userDetails = userResponse.data;
+
+          const user = await prisma.user.create({
+            data:{
+              email: userDetails.email,
+              name: userDetails.name,
+              quantityQuestions: 1
+
+            }
+          })
           
 
         
-        res.status(200).json(userDetails)
-        
+        res.status(200).json(user)
         
 
     }
